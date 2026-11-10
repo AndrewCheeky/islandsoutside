@@ -1,6 +1,6 @@
-# Caribbean Islands We Outside (islandsoutside.com)
+# One Caribbean We Outside (islandsoutside.com)
 
-Welcome page for **Caribbean Islands We Outside: outdoor weather for the Caribbean**. It links to:
+Welcome page for **One Caribbean We Outside: outdoor weather for the Caribbean**. It links to:
 
 - **Marine Weather** (repo `marine-weather`)
 - **Jamaica We Outside** (repo `exercise`)
