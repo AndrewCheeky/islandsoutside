@@ -56,6 +56,14 @@ a{color:var(--teal)}
 
 /* ---------- Islands ---------- */
 main{position:relative;z-index:2}
+.newhere{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px 18px;margin:20px 0 0;background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:14px 18px;border-left:6px solid var(--orange)}
+.newhere .nh-ico{width:38px;height:38px;border-radius:50%;background:var(--orange-soft);color:var(--orange);display:grid;place-items:center;font-weight:800;font-size:20px}
+.newhere p{margin:0;font-size:15px;color:var(--ink-2)}
+.newhere p b{color:var(--ink)}
+.newhere .nh-scale{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.pill{border-radius:999px;padding:4px 12px;font-weight:800;font-size:13px;color:#fff}
+.pill.go{background:var(--go)}.pill.caution{background:var(--caution)}.pill.avoid{background:var(--avoid)}
+.newhere button{border:0;background:var(--ink);color:#fff;font:inherit;font-weight:700;border-radius:999px;padding:0 18px;min-height:44px;cursor:pointer}
 .section-title{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:30px 0 12px}
 .section-title h2{margin:0;font-size:26px}
 .section-title p{margin:0;color:var(--muted);font-size:14px}
@@ -131,6 +139,8 @@ main{position:relative;z-index:2}
   .brand{font-size:19px}
   .nav a{font-size:14px;padding:6px 10px}
   .islands,.about{grid-template-columns:1fr}
+  .newhere{grid-template-columns:auto 1fr;padding:12px 14px}
+  .newhere button{grid-column:1/-1;width:100%}
   .islands{gap:12px}
   .island-body{padding:14px 16px;gap:4px}
   .glance{font-size:19px}
@@ -171,6 +181,7 @@ main{position:relative;z-index:2}
 </header>
 
 <main class="wrap">
+  <div class="newhere" id="newhere" role="note" hidden><span class="nh-ico" aria-hidden="true">?</span><div><p><b>New here?</b> Each island gets a score out of 10 for its next outdoor window.</p><div class="nh-scale"><span class="pill go">7–10 Go</span><span class="pill caution">5–6 Take care</span><span class="pill avoid">0–4 Skip it</span></div></div><button type="button" id="newhere-ok">Got it</button></div>
   <div class="section-title" id="islands">
     <h2>Today at a glance</h2>
     <p>The next outdoor window on each island, in its local time.</p>
@@ -229,6 +240,15 @@ main{position:relative;z-index:2}
   const fill = (sel, items) => { items.forEach(([label, url]) => { const o = document.createElement('option'); o.textContent = label; if (url) o.value = url; else { o.disabled = true; o.value = ''; } sel.appendChild(o); }); sel.addEventListener('change', () => { if (sel.value) window.location.href = sel.value; }); };
   fill(document.getElementById('pick-active'), ISLANDS.map(i => [i.name, SITES.active + i.path]));
   fill(document.getElementById('pick-fish'), ISLANDS.map(i => i.marine ? [i.name, SITES.marine] : [i.name + ' (coming soon)', '']));
+
+  // First visit: a one-time "New here?" tip explaining the scores.
+  (function newHere() {
+    const tip = document.getElementById('newhere'); let seen = '';
+    try { seen = localStorage.getItem('oc.newhere') || ''; } catch {}
+    if (seen === 'seen') return;
+    tip.hidden = false;
+    document.getElementById('newhere-ok').addEventListener('click', () => { try { localStorage.setItem('oc.newhere', 'seen'); } catch {} tip.hidden = true; });
+  })();
 
   // At-a-glance tiles (no links): one friendly line per island for the next window.
   const list = document.getElementById('island-list');
