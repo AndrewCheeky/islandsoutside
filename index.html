@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IslandsOutside | Outdoor weather for the Caribbean</title>
+<meta name="description" content="IslandsOutside: friendly outdoor weather for the Caribbean. Marine forecasts for fishers and boaters, and the best times to run, ride or swim.">
+<meta name="theme-color" content="#0b2a3c">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Roboto:wght@400;500;700&display=swap">
+<style>
+:root{
+  --sea:#0b2a3c;--sea-2:#12405a;--teal:#0e9aa7;--teal-soft:#e3f5f6;--orange:#fc4c02;--orange-2:#ff7a33;--orange-soft:#fff1ea;
+  --ink:#1d2730;--ink-2:#45525e;--muted:#6b7884;--line:#e3e8ec;--bg:#f5f7f8;--card:#fff;
+  --go:#1f9d55;--go-soft:#e7f6ee;--caution:#e08a00;--caution-soft:#fff4e0;--avoid:#d63b2f;--avoid-soft:#fdebea;
+  --radius:20px;--shadow:0 1px 2px rgba(10,30,45,.06),0 10px 28px rgba(10,30,45,.08);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Roboto",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+h1,h2,h3,.brand,.score,.chip{font-family:"Oswald","Roboto Condensed","Arial Narrow",sans-serif;letter-spacing:.01em}
+a{color:var(--teal)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+.ico{display:inline-flex;width:1.2em;height:1.2em;flex:0 0 auto}
+.ico svg{width:100%;height:100%}
+
+/* Hero: sky to sea, drawn in CSS and SVG */
+.hero{position:relative;color:#fff;overflow:hidden;background:linear-gradient(180deg,#0f3d57 0%,#14607a 45%,#1b8a98 70%,#0b2a3c 100%)}
+.hero-art{position:absolute;inset:auto 0 0 0;width:100%;height:150px;display:block}
+.sun{position:absolute;right:max(24px,calc(50% - 470px));top:96px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle at 40% 40%,#ffd38a,#ff9a3c 55%,rgba(255,122,51,0) 72%);opacity:.95}
+.hero-in{position:relative;z-index:1;padding:20px 16px 150px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:600;font-size:22px;letter-spacing:.07em}
+.brand b{color:var(--orange-2);font-weight:700}
+.brand svg{width:30px;height:30px}
+.island{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.14);backdrop-filter:blur(6px);border-radius:999px;padding:4px}
+.chip{border:0;border-radius:999px;padding:7px 14px;font-weight:600;font-size:15px;background:transparent;color:#fff;cursor:pointer}
+.chip[aria-pressed="true"]{background:#fff;color:var(--sea)}
+.chip:disabled{opacity:.6;cursor:default;font-size:13px}
+.intro{max-width:620px;margin-top:44px}
+.intro h1{margin:0;font-size:clamp(32px,5vw,54px);line-height:1.04;text-transform:uppercase}
+.intro p{margin:12px 0 0;font-size:18px;color:#d9eef2;max-width:46ch}
+
+/* Cards */
+main{margin-top:-110px;position:relative;z-index:2}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.card{display:flex;flex-direction:column;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;text-decoration:none;color:inherit;transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-3px);box-shadow:0 2px 4px rgba(10,30,45,.08),0 16px 36px rgba(10,30,45,.14)}
+.card:focus-visible{outline:3px solid var(--orange-2);outline-offset:3px}
+.card-band{height:8px}
+.marine .card-band{background:linear-gradient(90deg,var(--sea),var(--teal))}
+.active .card-band{background:linear-gradient(90deg,var(--orange),var(--orange-2))}
+.card-body{padding:20px 22px 18px;display:flex;flex-direction:column;gap:10px;flex:1}
+.card-head{display:flex;align-items:center;gap:12px}
+.badge{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;flex:0 0 auto}
+.badge svg{width:26px;height:26px}
+.marine .badge{background:var(--teal-soft);color:var(--sea-2)}
+.active .badge{background:var(--orange-soft);color:var(--orange)}
+.card h2{margin:0;font-size:24px;line-height:1.1}
+.card .for{margin:2px 0 0;color:var(--muted);font-size:14px}
+.card p.desc{margin:0;color:var(--ink-2)}
+.status{margin-top:auto;display:flex;align-items:center;gap:12px;background:var(--bg);border-radius:14px;padding:12px 14px;min-height:64px}
+.status .dot{width:12px;height:12px;border-radius:50%;background:#b8c2ca;flex:0 0 auto}
+.status.go .dot{background:var(--go)}.status.caution .dot{background:var(--caution)}.status.avoid .dot{background:var(--avoid)}
+.status.go{background:var(--go-soft)}.status.caution{background:var(--caution-soft)}.status.avoid{background:var(--avoid-soft)}
+.status strong{display:block;font-size:15px}
+.status span{display:block;font-size:13px;color:var(--ink-2)}
+.status .score{margin-left:auto;font-size:28px;font-weight:700;color:var(--ink);line-height:1}
+.go-btn{display:inline-flex;align-items:center;gap:6px;font-weight:700;margin-top:4px}
+.marine .go-btn{color:var(--sea-2)}.active .go-btn{color:var(--orange)}
+
+/* Lightning strip */
+.lightning{display:flex;align-items:center;gap:12px;margin-top:18px;background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:14px 18px;border-left:6px solid #9aa6af}
+.lightning .ico{width:26px;height:26px;color:#6b7884}
+.lightning strong{display:block}
+.lightning span{display:block;font-size:13px;color:var(--muted)}
+.lightning.danger{border-left-color:var(--avoid);background:var(--avoid-soft)}.lightning.danger .ico{color:var(--avoid)}
+.lightning.watch{border-left-color:var(--caution)}.lightning.watch .ico{color:var(--caution)}
+.lightning.clear{border-left-color:var(--go)}.lightning.clear .ico{color:var(--go)}
+
+.about{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:34px 0 10px}
+.about div{background:transparent}
+.about h3{margin:0 0 4px;font-size:18px}
+.about p{margin:0;color:var(--ink-2);font-size:14.5px}
+.foot{background:var(--sea);color:#b9cbd6;padding:22px 0 30px;font-size:14px;margin-top:34px}
+.foot a{color:#8fe1e8}
+.foot p{margin:4px 0}
+.foot strong{color:#fff}
+
+@media(max-width:760px){
+  .cards,.about{grid-template-columns:1fr}
+  .intro{margin-top:26px}
+  .intro p{font-size:16px}
+  .hero-in{padding-bottom:130px}
+  main{margin-top:-96px}
+  .sun{width:60px;height:60px;top:14px;right:10px}
+  .brand{font-size:19px}
+  .top{flex-wrap:wrap}
+}
+@media(prefers-reduced-motion:reduce){.card{transition:none}.card:hover{transform:none}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="sun" aria-hidden="true"></div>
+  <svg class="hero-art" viewBox="0 0 1440 150" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 70 C 180 40 360 100 540 70 S 900 40 1080 70 S 1320 95 1440 66 V150 H0Z" fill="#1b8a98" opacity=".55"/>
+    <path d="M0 96 C 200 70 380 122 600 96 S 980 70 1180 98 S 1380 112 1440 92 V150 H0Z" fill="#14607a" opacity=".85"/>
+    <path d="M0 120 C 240 100 460 140 720 118 S 1160 102 1440 122 V150 H0Z" fill="#f5f7f8"/>
+  </svg>
+  <div class="wrap hero-in">
+    <div class="top">
+      <a class="brand" href="./" aria-label="IslandsOutside home">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="21" cy="11" r="6" fill="#ff9a3c"/><path d="M2 22c3 0 3-2 6-2s3 2 6 2 3-2 6-2 3 2 6 2 3-2 4-2" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M2 27c3 0 3-2 6-2s3 2 6 2 3-2 6-2 3 2 6 2 3-2 4-2" fill="none" stroke="#8fe1e8" stroke-width="2.4" stroke-linecap="round"/></svg>
+        <span>ISLANDS<b>OUTSIDE</b></span>
+      </a>
+      <div class="island" role="group" aria-label="Island">
+        <button class="chip" type="button" aria-pressed="true">Jamaica</button>
+        <button class="chip" type="button" disabled title="More islands are coming">More islands soon</button>
+      </div>
+    </div>
+    <div class="intro">
+      <h1>Outdoor weather for the Caribbean</h1>
+      <p>Know before you go: friendly forecasts for time on the water, and the best time to run, ride or swim.</p>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="cards">
+    <a class="card marine" id="marine-card" href="#">
+      <div class="card-band"></div>
+      <div class="card-body">
+        <div class="card-head">
+          <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v11M12 3l7 9h-7M4 17h16l-2 3H6z"/><path d="M2 21c2 0 2-1 4-1s2 1 4 1 2-1 4-1 2 1 4 1 2-1 4-1"/></svg></span>
+          <div><h2>Marine Weather</h2><p class="for">For fishers, sailors and boaters</p></div>
+        </div>
+        <p class="desc">Seas, wind, swell and comfort for 14 fishing banks, with official small craft warnings, sun, moon and tides.</p>
+        <div class="status" id="marine-status"><span class="dot"></span><div><strong>Checking marine warnings…</strong><span>&nbsp;</span></div></div>
+        <span class="go-btn">Open Marine Weather <span aria-hidden="true">→</span></span>
+      </div>
+    </a>
+    <a class="card active" id="active-card" href="#">
+      <div class="card-band"></div>
+      <div class="card-body">
+        <div class="card-head">
+          <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="4.5" r="2"/><path d="M8 21l3-6 3 2v4M6 12l3-3 4 1 3 3 3-1"/></svg></span>
+          <div><h2>Jamaica We Active!</h2><p class="for">For runners, walkers, riders and swimmers</p></div>
+        </div>
+        <p class="desc">A simple 0–10 score for your best morning and evening, with heat, rain, lightning, sea and health notes.</p>
+        <div class="status" id="active-status"><span class="dot"></span><div><strong>Finding your best time…</strong><span>&nbsp;</span></div></div>
+        <span class="go-btn">Open Jamaica We Active! <span aria-hidden="true">→</span></span>
+      </div>
+    </a>
+  </div>
+
+  <div class="lightning" id="lightning" aria-live="polite">
+    <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span>
+    <div><strong id="lw-title">Checking for lightning across Jamaica…</strong><span id="lw-sub">Live strikes, checked every 5 minutes from 4 AM to 9 PM.</span></div>
+  </div>
+
+  <section class="about" aria-label="About">
+    <div><h3>Made for the islands</h3><p>Heat, humidity, Saharan dust, squalls and sea breezes, scored the way they feel here.</p></div>
+    <div><h3>Plain answers</h3><p>Go, Take care or Skip it, with the reasons shown. No account, no app to install.</p></div>
+    <div><h3>Growing</h3><p>Jamaica first. More Caribbean islands will follow.</p></div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p><strong>IslandsOutside</strong> · Forecasts from <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a> (<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>), lightning from <a href="https://www.xweather.com/" target="_blank" rel="noopener noreferrer">Xweather</a>, and official warnings from the Meteorological Service of Jamaica.</p>
+    <p>No accounts, cookies or tracking. Guidance only: always check conditions for yourself.</p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  'use strict';
+  // ---- Addresses: change these when the sites move to islandsoutside.com ----
+  const SITES = {
+    marine: 'https://marine-weather.andrewcheeky.com/',          // later: https://marine.islandsoutside.com/
+    active: 'https://andrewcheeky.github.io/exercise/',           // later: https://active.islandsoutside.com/
+  };
+  const MARINE_FEED = 'https://script.google.com/macros/s/AKfycbzwP_tF1SeJIBgB7HxTRBi374NiF0tQXGcSBFUk7EPPu1rSAepDsALW-iHeny6yo1Y/exec?action=marineAlert';
+  const LIGHTNING_FEED = 'https://script.google.com/macros/s/AKfycbyFY483SYd2P772OZbtMiMTD6CUUuTwLFsJBm2GLxmxmZk2uBm9oUr2N2emOf41L1_CTw/exec?action=lightning';
+  const TZ = 'America/Jamaica';
+
+  document.getElementById('marine-card').href = SITES.marine;
+  document.getElementById('active-card').href = SITES.active;
+
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+  const setStatus = (id, cls, title, sub, score) => {
+    const el = document.getElementById(id);
+    el.className = 'status' + (cls ? ' ' + cls : '');
+    el.innerHTML = `<span class="dot"></span><div><strong>${esc(title)}</strong><span>${esc(sub || '')}</span></div>${score != null ? `<span class="score">${esc(score)}</span>` : ''}`;
+  };
+
+  // Marine: official small craft warning status (JSONP, as the marine site does).
+  (function marine() {
+    const cb = 'ioMarine_' + Date.now();
+    const s = document.createElement('script');
+    const timer = setTimeout(() => { done(); setStatus('marine-status', '', 'Forecasts for 14 fishing banks', 'Tap to see today\'s seas and comfort scores'); }, 12000);
+    function done() { clearTimeout(timer); s.remove(); try { delete window[cb]; } catch { window[cb] = undefined; } }
+    window[cb] = d => {
+      done();
+      const sc = d && d.ok && d.smallCraft && d.smallCraft.active ? d.smallCraft : null;
+      const warn = sc && (Object.values(sc.bankLevels || {}).includes('WARNING') || /warning/i.test(String(sc.level || sc.type || '')));
+      if (sc) setStatus('marine-status', warn ? 'avoid' : 'caution', `Small craft ${warn ? 'warning' : 'caution'} in effect`, 'Official Met Service advisory. Check before you head out.');
+      else setStatus('marine-status', 'go', 'No official marine warnings', 'Tap to see today\'s seas and bank scores');
+    };
+    s.onerror = () => { done(); setStatus('marine-status', '', 'Forecasts for 14 fishing banks', 'Tap to see today\'s seas and comfort scores'); };
+    s.src = MARINE_FEED + '&callback=' + cb + '&_t=' + Date.now();
+    document.head.appendChild(s);
+  })();
+
+  // Active: the next run/ride window for Kingston from the site's forecast file.
+  (async function active() {
+    try {
+      const r = await fetch(SITES.active + 'data/forecast.json', {cache: 'no-store'});
+      const d = await r.json();
+      const L = d.locations.find(l => l.key === 'kingston') || d.locations.find(l => l.sport !== 'swim');
+      const now = new Date(), parts = new Intl.DateTimeFormat('en-CA', {timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false}).formatToParts(now);
+      const get = t => parts.find(p => p.type === t).value, today = `${get('year')}-${get('month')}-${get('day')}`, hour = Number(get('hour')) + Number(get('minute')) / 60;
+      const END = {am: 7, pm: 18.5};
+      let next = null;
+      for (const day of L.days) { for (const k of ['am', 'pm']) { if (next) break; if (day.date < today || (day.date === today && END[k] <= hour)) continue; const s = day.windows[k] && day.windows[k].scores && day.windows[k].scores.mixed; if (s) next = {day, k, s}; } if (next) break; }
+      if (!next) throw Error('no window');
+      const when = (next.day.date === today ? 'This ' : 'Tomorrow ') + (next.k === 'am' ? 'morning' : 'evening');
+      const label = {go: 'Go', caution: 'Take care', avoid: 'Skip it'}[next.s.band];
+      setStatus('active-status', next.s.band, `${when} in ${L.name}: ${label}`, next.s.advice || '', next.s.index);
+    } catch {
+      setStatus('active-status', '', 'Run, ride and swim scores', 'Tap to find your best time today');
+    }
+  })();
+
+  // Lightning across Jamaica in the last 30 minutes.
+  (async function lightning() {
+    const box = document.getElementById('lightning');
+    const set = (cls, title, sub) => { box.className = 'lightning' + (cls ? ' ' + cls : ''); document.getElementById('lw-title').textContent = title; document.getElementById('lw-sub').textContent = sub; };
+    try {
+      const r = await fetch(LIGHTNING_FEED, {cache: 'no-store'});
+      const f = await r.json();
+      const fresh = f.status === 'live' && f.updated && Date.now() - Date.parse(f.updated) < 15 * 60000;
+      if (!fresh) return set('', 'Lightning watch is off right now', 'It runs from 4 AM to 9 PM.');
+      const nowS = Date.now() / 1000;
+      const recent = (f.cells || []).filter(c => nowS - c[2] <= 30 * 60);
+      const strikes = recent.reduce((a, c) => a + c[3], 0);
+      const at = new Intl.DateTimeFormat('en-US', {timeZone: TZ, hour: 'numeric', minute: '2-digit'}).format(new Date(f.updated));
+      if (!strikes) set('clear', 'No lightning near Jamaica', `None in the last 30 minutes · checked ${at}`);
+      else set(strikes >= 20 ? 'danger' : 'watch', `${strikes} lightning strike${strikes === 1 ? '' : 's'} near Jamaica in the last 30 minutes`, `Open Jamaica We Active! for the distance from your area · checked ${at}`);
+    } catch { set('', 'Lightning watch unavailable', 'Try again in a few minutes.'); }
+  })();
+})();
+</script>
+</body>
+</html>
