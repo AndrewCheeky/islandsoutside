@@ -73,8 +73,13 @@ main{position:relative;z-index:2}
 .btn:hover{transform:translateY(-1px)}
 .btn:focus-visible{outline:3px solid var(--orange-2);outline-offset:2px}
 .btn .ico{width:18px;height:18px}
-.btn.soon{color:var(--muted);border-style:dashed;cursor:default}
-.btn.soon:hover{transform:none}
+.mini{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:14px;color:var(--ink-2)}
+.mini li{display:flex;align-items:center;gap:8px}
+.mini .dot{width:10px;height:10px;border-radius:50%;background:#b8c2ca;flex:0 0 auto}
+.mini .go .dot,.mini li.go .dot{background:var(--go)}.mini li.caution .dot{background:var(--caution)}.mini li.avoid .dot{background:var(--avoid)}
+.mini li.avoid{color:#9a2018;font-weight:700}
+.btn{min-height:44px}
+.foot-links a{display:inline-block;padding:10px 2px}
 
 /* ---------- Lightning and about ---------- */
 .lightning{display:flex;align-items:center;gap:12px;margin-top:18px;background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:14px 18px;border-left:6px solid #9aa6af}
@@ -105,6 +110,12 @@ main{position:relative;z-index:2}
   .brand{font-size:19px}
   .nav a{font-size:14px;padding:6px 10px}
   .islands,.about{grid-template-columns:1fr}
+  .islands{gap:12px}
+  .island-body{padding:14px 16px;gap:10px}
+  .island h3{font-size:21px}
+  .island .places{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+  .status{min-height:0;padding:10px 12px}
+  .status .score{font-size:24px}
   .section-title{flex-direction:column;align-items:flex-start;gap:2px}
 }
 @media(max-width:520px){.nav{display:none}}
@@ -135,14 +146,9 @@ main{position:relative;z-index:2}
 <main class="wrap">
   <div class="section-title" id="islands">
     <h2>Choose your island</h2>
-    <p>Scores out of 10 for the next morning or evening window, updated through the day.</p>
+    <p>Scores out of 10 for the next morning or evening window. Marine forecasts: Jamaica now, more islands soon.</p>
   </div>
   <div class="islands" id="island-list"></div>
-
-  <div class="lightning" id="lightning" aria-live="polite">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>
-    <div><strong id="lw-title">Checking for lightning across Jamaica…</strong><span id="lw-sub">Live strikes, checked every 5 minutes from 4 AM to 9 PM.</span></div>
-  </div>
 
   <section class="about" aria-label="About">
     <div><h3>Made for the islands</h3><p>Heat, humidity, Saharan dust, squalls and sea breezes, scored the way they feel here.</p></div>
@@ -201,9 +207,10 @@ main{position:relative;z-index:2}
       <div class="island-body">
         <div><h3><img class="isle-flag" src="${SITES.active}assets/flags/${i.code.toLowerCase()}.svg" alt="" aria-hidden="true">${esc(i.name)}</h3><p class="places">${esc(i.places)}</p></div>
         <div class="status" id="st-${i.code}"><span class="dot"></span><div><strong>Finding the best time…</strong><span class="sub">&nbsp;</span></div></div>
+        ${i.marine ? `<ul class="mini" id="mini-${i.code}" aria-live="polite"><li id="mini-marine"><span class="dot"></span>Checking marine warnings…</li><li id="mini-lightning"><span class="dot"></span>Checking for lightning…</li></ul>` : ''}
         <div class="links">
           <a class="btn primary" href="${SITES.active + i.path}">${ICON.run}${esc(i.brand)}</a>
-          ${i.marine ? `<a class="btn" href="${SITES.marine}">${ICON.boat}Marine Weather</a>` : `<span class="btn soon" title="Marine forecasts for ${esc(i.name)} are coming">${ICON.boat}Marine coming soon</span>`}
+          ${i.marine ? `<a class="btn" href="${SITES.marine}">${ICON.boat}Marine Weather</a>` : ''}
         </div>
       </div>
     </article>`).join('');
@@ -219,34 +226,41 @@ main{position:relative;z-index:2}
     return {date: `${g('year')}-${g('month')}-${g('day')}`, hour: Number(g('hour')) % 24 + Number(g('minute')) / 60};
   };
 
-  // Next run/ride window for each island's main place (the first run & ride place on its page).
+  // Next run/ride window for each island's main place, from the small summary file (falls back to the full forecast).
   (async function scores() {
+    const fallback = () => ISLANDS.forEach(i => setStatus(i.code, '', 'Forecasts for runners, riders and swimmers', 'Tap to find your best time'));
     try {
-      const r = await fetch(SITES.active + 'data/forecast.json', {cache: 'no-store'});
-      const d = await r.json();
+      let islands;
+      try {
+        const r = await fetch(SITES.active + 'data/summary.json', {cache: 'no-store'});
+        if (!r.ok) throw Error();
+        islands = (await r.json()).islands.map(x => ({code: x.code, place: x.place, days: x.days}));
+      } catch {
+        const d = await (await fetch(SITES.active + 'data/forecast.json', {cache: 'no-store'})).json();
+        islands = ISLANDS.map(i => { const L = d.locations.find(l => (l.territory || 'JM') === i.code && l.sport !== 'swim'); return L ? {code: i.code, place: L.name, days: L.days.map(dd => ({date: dd.date, am: dd.windows.am?.scores?.mixed, pm: dd.windows.pm?.scores?.mixed}))} : null; }).filter(Boolean);
+      }
       const END = {am: 7, pm: 18.5};
       for (const i of ISLANDS) {
-        const L = d.locations.find(l => (l.territory || 'JM') === i.code && l.sport !== 'swim');
-        if (!L) { setStatus(i.code, '', 'Forecasts for runners, riders and swimmers', 'Tap to find your best time'); continue; }
+        const isl = islands.find(x => x.code === i.code);
+        if (!isl) { setStatus(i.code, '', 'Forecasts for runners, riders and swimmers', 'Tap to find your best time'); continue; }
         const now = localNow(i.tz);
         let next = null;
-        for (const day of L.days) {
+        for (const day of isl.days) {
           for (const k of ['am', 'pm']) {
             if (next || day.date < now.date || (day.date === now.date && END[k] <= now.hour)) continue;
-            const s = day.windows[k] && day.windows[k].scores && day.windows[k].scores.mixed;
-            if (s) next = {day, k, s};
+            if (day[k]) next = {day, k, s: day[k]};
           }
           if (next) break;
         }
         if (!next) { setStatus(i.code, '', 'Forecasts for runners, riders and swimmers', 'Tap to find your best time'); continue; }
         const when = (next.day.date === now.date ? 'This ' : 'Tomorrow ') + (next.k === 'am' ? 'morning' : 'evening');
         const label = {go: 'Go', caution: 'Take care', avoid: 'Skip it'}[next.s.band];
-        setStatus(i.code, next.s.band, `${when} in ${L.name}: ${label}`, next.s.advice || '', next.s.index);
+        setStatus(i.code, next.s.band, `${when} in ${isl.place}: ${label}`, next.s.advice || '', next.s.index);
       }
-    } catch {
-      ISLANDS.forEach(i => setStatus(i.code, '', 'Forecasts for runners, riders and swimmers', 'Tap to find your best time'));
-    }
+    } catch { fallback(); }
   })();
+
+  const mini = (id, cls, text) => { const li = document.getElementById(id); if (li) { li.className = cls || ''; li.innerHTML = `<span class="dot"></span>${esc(text)}`; } };
 
   // Official marine warnings (Jamaica): add a line under the Jamaica card's status.
   (function marine() {
@@ -256,32 +270,25 @@ main{position:relative;z-index:2}
     window[cb] = d => {
       done();
       const sc = d && d.ok && d.smallCraft && d.smallCraft.active ? d.smallCraft : null;
-      const links = document.querySelector('#isle-JM .links'); if (!links) return;
       const warn = sc && (Object.values(sc.bankLevels || {}).includes('WARNING') || /warning/i.test(String(sc.level || sc.type || '')));
-      const note = document.createElement('div');
-      note.className = 'status ' + (sc ? (warn ? 'avoid' : 'caution') : 'go');
-      note.innerHTML = `<span class="dot"></span><div><strong>${sc ? `Small craft ${warn ? 'warning' : 'caution'} in effect` : 'No official marine warnings'}</strong><span class="sub">${sc ? 'Official Met Service advisory. Check before heading out.' : 'Met Service of Jamaica, for boats and fishers'}</span></div>`;
-      links.parentNode.insertBefore(note, links);
+      mini('mini-marine', sc ? (warn ? 'avoid' : 'caution') : 'go', sc ? `Small craft ${warn ? 'warning' : 'caution'} in effect (Met Service)` : 'No official marine warnings');
     };
-    s.onerror = done;
+    s.onerror = () => { done(); mini('mini-marine', '', 'Marine warnings unavailable right now'); };
     s.src = MARINE_FEED + '&callback=' + cb + '&_t=' + Date.now();
     document.head.appendChild(s);
   })();
 
-  // Lightning across Jamaica in the last 30 minutes.
+  // Lightning across Jamaica in the last 30 minutes (a line on the Jamaica card).
   (async function lightning() {
-    const set = (cls, title, sub) => { document.getElementById('lightning').className = 'lightning' + (cls ? ' ' + cls : ''); document.getElementById('lw-title').textContent = title; document.getElementById('lw-sub').textContent = sub; };
     try {
-      const r = await fetch(LIGHTNING_FEED, {cache: 'no-store'});
-      const f = await r.json();
+      const f = await (await fetch(LIGHTNING_FEED, {cache: 'no-store'})).json();
       const fresh = f.status === 'live' && f.updated && Date.now() - Date.parse(f.updated) < 15 * 60000;
-      if (!fresh) return set('', 'Lightning watch (Jamaica) is off right now', 'It runs from 4 AM to 9 PM Jamaica time.');
+      if (!fresh) return mini('mini-lightning', '', 'Lightning watch is off (runs 4 AM–9 PM)');
       const nowS = Date.now() / 1000;
       const strikes = (f.cells || []).filter(c => nowS - c[2] <= 30 * 60).reduce((a, c) => a + c[3], 0);
-      const at = new Intl.DateTimeFormat('en-US', {timeZone: 'America/Jamaica', hour: 'numeric', minute: '2-digit'}).format(new Date(f.updated));
-      if (!strikes) set('clear', 'No lightning near Jamaica', `None in the last 30 minutes · checked ${at} · other islands coming soon`);
-      else set(strikes >= 20 ? 'danger' : 'watch', `${strikes} lightning strike${strikes === 1 ? '' : 's'} near Jamaica in the last 30 minutes`, `Open Jamaica We Outside for the distance from your area · checked ${at}`);
-    } catch { set('', 'Lightning watch unavailable', 'Try again in a few minutes.'); }
+      if (!strikes) mini('mini-lightning', 'go', 'No lightning near Jamaica in the last 30 minutes');
+      else mini('mini-lightning', strikes >= 20 ? 'avoid' : 'caution', `${strikes} lightning strike${strikes === 1 ? '' : 's'} near Jamaica in the last 30 minutes`);
+    } catch { mini('mini-lightning', '', 'Lightning watch unavailable right now'); }
   })();
 })();
 </script>
