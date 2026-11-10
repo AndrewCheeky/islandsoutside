@@ -90,6 +90,10 @@ main{position:relative;z-index:2}
 .foot a{color:#8fe1e8}
 .foot p{margin:4px 0}
 .foot strong{color:#fff}
+.foot-brand{margin-bottom:8px;color:#fff;font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.07em;font-size:20px}
+.foot-brand b{color:var(--orange-2)}
+.foot-links a{font-weight:700}
+.foot-copy{color:#7f97a6;font-size:13px;margin-top:10px!important}
 
 @media(max-width:760px){
   .hero{min-height:0}
@@ -148,8 +152,10 @@ main{position:relative;z-index:2}
 
 <footer class="foot">
   <div class="wrap">
-    <p><strong>Caribbean Islands We Outside</strong> · Forecasts from <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a> (<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>), lightning from <a href="https://www.xweather.com/" target="_blank" rel="noopener noreferrer">Xweather</a>, and official marine warnings from the Meteorological Service of Jamaica.</p>
-    <p>No accounts, cookies or tracking. Guidance only: always check conditions for yourself.</p>
+    <div class="foot-brand"><span class="wordmark"><small>CARIBBEAN ISLANDS</small><span>WE <b>OUTSIDE</b></span></span></div>
+    <p>Run · Ride · Swim · Sail. Forecast guidance only: always check conditions for yourself. Not for navigation.</p>
+    <p class="foot-links"><a id="ft-credits" href="#">Credits</a> · <a id="ft-privacy" href="#">Privacy</a> · <a id="ft-how" href="#">How this site works</a></p>
+    <p class="foot-copy">© Caribbean Islands We Outside</p>
   </div>
 </footer>
 
@@ -182,6 +188,9 @@ main{position:relative;z-index:2}
     boat: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v11M12 3l7 9h-7M4 17h16l-2 3H6z"/></svg>',
   };
   document.getElementById('nav-marine').href = SITES.marine;
+  document.getElementById('ft-credits').href = SITES.active + 'credits.html';
+  document.getElementById('ft-privacy').href = SITES.active + 'privacy.html';
+  document.getElementById('ft-how').href = SITES.active + 'how-it-works.html';
 
   // Island cards
   const list = document.getElementById('island-list');
