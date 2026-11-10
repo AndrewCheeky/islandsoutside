@@ -43,6 +43,10 @@ a{color:var(--teal)}
 .intro>*{max-width:560px}
 .intro h1{margin:0;font-size:clamp(32px,5vw,54px);line-height:1.04;text-transform:uppercase;text-shadow:0 2px 16px rgba(0,0,0,.3)}
 .intro p{margin:14px 0 0;font-size:18px;color:#e2f2f5;max-width:44ch}
+.pick{display:inline-flex;align-items:center;gap:8px;margin-top:22px;background:#fff;color:var(--ink);border-radius:999px;padding:6px 10px 6px 16px;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.pick svg{width:20px;height:20px;color:var(--orange)}
+.pick select{border:0;background:transparent;font:inherit;font-weight:700;font-size:16px;color:var(--ink);padding:8px 4px;min-height:44px;cursor:pointer;max-width:70vw}
+.pick:focus-within{outline:3px solid var(--orange-2);outline-offset:3px}
 .intro .cta{display:inline-flex;align-items:center;gap:8px;margin-top:22px;background:var(--orange);color:#fff;text-decoration:none;font-weight:700;padding:12px 20px;border-radius:999px;box-shadow:0 6px 18px rgba(252,76,2,.4)}
 .intro .cta:focus-visible{outline:3px solid #fff;outline-offset:3px}
 
@@ -55,7 +59,15 @@ main{position:relative;z-index:2}
 .island{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
 .flag{height:8px;display:flex}
 .flag i{flex:1}
-.island-body{padding:18px 20px 18px;display:flex;flex-direction:column;gap:12px;flex:1}
+.island-body{padding:16px 20px 18px;display:flex;flex-direction:column;gap:6px;flex:1}
+.isle-head{display:flex;align-items:center;gap:10px}
+.isle-head .badge{margin-left:auto;min-width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-family:"Oswald",sans-serif;font-weight:700;font-size:22px;color:#fff;background:#b8c2ca}
+.island.go .badge{background:var(--go)}.island.caution .badge{background:var(--caution)}.island.avoid .badge{background:var(--avoid)}
+.glance{margin:4px 0 0;font-family:"Oswald","Roboto Condensed",sans-serif;font-size:21px;line-height:1.2;font-weight:600}
+.island.go .glance{color:#13693a}.island.caution .glance{color:#8a5400}.island.avoid .glance{color:#9a2018}
+.glance-sub{margin:0;color:var(--muted);font-size:14px}
+.alert{margin:6px 0 0;font-size:14px;font-weight:700;color:#9a2018;display:flex;gap:6px;align-items:center}
+.alert.caution{color:#8a5400}
 .island h3{margin:0;font-size:24px;line-height:1.1;display:flex;align-items:center;gap:10px}
 .isle-flag{height:20px;width:auto;border-radius:3px;box-shadow:0 0 0 1px rgba(0,0,0,.12)}
 .island .places{margin:2px 0 0;color:var(--muted);font-size:13.5px}
@@ -111,7 +123,8 @@ main{position:relative;z-index:2}
   .nav a{font-size:14px;padding:6px 10px}
   .islands,.about{grid-template-columns:1fr}
   .islands{gap:12px}
-  .island-body{padding:14px 16px;gap:10px}
+  .island-body{padding:14px 16px;gap:4px}
+  .glance{font-size:19px}
   .island h3{font-size:21px}
   .island .places{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
   .status{min-height:0;padding:10px 12px}
@@ -139,14 +152,15 @@ main{position:relative;z-index:2}
   <div class="wrap intro">
     <h1>Outdoor weather for the Caribbean</h1>
     <p>Know before you go: the best time to run, ride or swim on your island, and marine forecasts for time on the water.</p>
-    <a class="cta" href="#islands">Choose your island <span aria-hidden="true">↓</span></a>
+    <label class="pick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+      <select id="island-pick" aria-label="Choose your island"><option value="">Choose your island</option></select></label>
   </div>
 </header>
 
 <main class="wrap">
   <div class="section-title" id="islands">
-    <h2>Choose your island</h2>
-    <p>Scores out of 10 for the next morning or evening window. Marine forecasts: Jamaica now, more islands soon.</p>
+    <h2>Today at a glance</h2>
+    <p>The next outdoor window on each island, in its local time.</p>
   </div>
   <div class="islands" id="island-list"></div>
 
@@ -199,26 +213,36 @@ main{position:relative;z-index:2}
   document.getElementById('ft-privacy').href = SITES.active + 'privacy.html';
   document.getElementById('ft-how').href = SITES.active + 'how-it-works.html';
 
-  // Island cards
+  // Island picker (dropdown in the header): goes straight to that island's page.
+  const pick = document.getElementById('island-pick');
+  ISLANDS.forEach(i => { const o = document.createElement('option'); o.value = SITES.active + i.path; o.textContent = i.name; pick.appendChild(o); });
+  pick.addEventListener('change', () => { if (pick.value) window.location.href = pick.value; });
+
+  // At-a-glance tiles (no links): one friendly line per island for the next window.
   const list = document.getElementById('island-list');
   list.innerHTML = ISLANDS.map(i => `
     <article class="island" id="isle-${i.code}">
       <div class="flag" aria-hidden="true">${i.flag.map(c => `<i style="background:${c}"></i>`).join('')}</div>
       <div class="island-body">
-        <div><h3><img class="isle-flag" src="${SITES.active}assets/flags/${i.code.toLowerCase()}.svg" alt="" aria-hidden="true">${esc(i.name)}</h3><p class="places">${esc(i.places)}</p></div>
-        <div class="status" id="st-${i.code}"><span class="dot"></span><div><strong>Finding the best time…</strong><span class="sub">&nbsp;</span></div></div>
-        ${i.marine ? `<ul class="mini" id="mini-${i.code}" aria-live="polite"><li id="mini-marine"><span class="dot"></span>Checking marine warnings…</li><li id="mini-lightning"><span class="dot"></span>Checking for lightning…</li></ul>` : ''}
-        <div class="links">
-          <a class="btn primary" href="${SITES.active + i.path}">${ICON.run}${esc(i.brand)}</a>
-          ${i.marine ? `<a class="btn" href="${SITES.marine}">${ICON.boat}Marine Weather</a>` : ''}
-        </div>
+        <div class="isle-head"><img class="isle-flag" src="${SITES.active}assets/flags/${i.code.toLowerCase()}.svg" alt="" aria-hidden="true"><h3>${esc(i.name)}</h3><span class="badge" id="bd-${i.code}" aria-hidden="true">–</span></div>
+        <p class="glance" id="gl-${i.code}">Checking the forecast…</p>
+        <p class="glance-sub" id="gs-${i.code}">&nbsp;</p>
+        ${i.marine ? `<p class="alert" id="al-marine" hidden></p><p class="alert" id="al-lightning" hidden></p>` : ''}
       </div>
     </article>`).join('');
 
-  const setStatus = (code, cls, title, sub, score) => {
-    const el = document.getElementById('st-' + code); if (!el) return;
-    el.className = 'status' + (cls ? ' ' + cls : '');
-    el.innerHTML = `<span class="dot"></span><div><strong>${esc(title)}</strong><span class="sub">${esc(sub || '')}</span></div>${score != null ? `<span class="score">${esc(score)}</span>` : ''}`;
+  const setGlance = (code, band, line, sub, score) => {
+    const card = document.getElementById('isle-' + code); if (!card) return;
+    card.className = 'island' + (band ? ' ' + band : '');
+    document.getElementById('gl-' + code).textContent = line;
+    document.getElementById('gs-' + code).textContent = sub || '';
+    document.getElementById('bd-' + code).textContent = score != null ? score : '–';
+  };
+  // Friendly one-liners, depending on which window is next.
+  const LINES = {
+    am: {go: 'Great morning for an outdoor workout', caution: 'Morning workout is fine, take it easy', avoid: 'Tough morning outside, think indoors'},
+    pm: {go: 'Looking good for an evening workout', caution: 'Evening is doable, with care', avoid: 'Think twice about outdoor plans this evening'},
+    tam: {go: 'Set the alarm: tomorrow morning looks great', caution: 'Tomorrow morning is fine, with care', avoid: 'Tomorrow morning looks rough, plan indoors'},
   };
   const localNow = tz => {
     const p = new Intl.DateTimeFormat('en-CA', {timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false}).formatToParts(new Date());
@@ -228,7 +252,7 @@ main{position:relative;z-index:2}
 
   // Next run/ride window for each island's main place, from the small summary file (falls back to the full forecast).
   (async function scores() {
-    const fallback = () => ISLANDS.forEach(i => setStatus(i.code, '', 'Forecasts for runners, riders and swimmers', 'Tap to find your best time'));
+    const fallback = () => ISLANDS.forEach(i => setGlance(i.code, '', 'Forecast unavailable right now', 'Choose your island above for details'));
     try {
       let islands;
       try {
@@ -239,28 +263,24 @@ main{position:relative;z-index:2}
         const d = await (await fetch(SITES.active + 'data/forecast.json', {cache: 'no-store'})).json();
         islands = ISLANDS.map(i => { const L = d.locations.find(l => (l.territory || 'JM') === i.code && l.sport !== 'swim'); return L ? {code: i.code, place: L.name, days: L.days.map(dd => ({date: dd.date, am: dd.windows.am?.scores?.mixed, pm: dd.windows.pm?.scores?.mixed}))} : null; }).filter(Boolean);
       }
-      const END = {am: 7, pm: 18.5};
       for (const i of ISLANDS) {
         const isl = islands.find(x => x.code === i.code);
-        if (!isl) { setStatus(i.code, '', 'Forecasts for runners, riders and swimmers', 'Tap to find your best time'); continue; }
         const now = localNow(i.tz);
-        let next = null;
-        for (const day of isl.days) {
-          for (const k of ['am', 'pm']) {
-            if (next || day.date < now.date || (day.date === now.date && END[k] <= now.hour)) continue;
-            if (day[k]) next = {day, k, s: day[k]};
-          }
-          if (next) break;
-        }
-        if (!next) { setStatus(i.code, '', 'Forecasts for runners, riders and swimmers', 'Tap to find your best time'); continue; }
-        const when = (next.day.date === now.date ? 'This ' : 'Tomorrow ') + (next.k === 'am' ? 'morning' : 'evening');
-        const label = {go: 'Go', caution: 'Take care', avoid: 'Skip it'}[next.s.band];
-        setStatus(i.code, next.s.band, `${when} in ${isl.place}: ${label}`, next.s.advice || '', next.s.index);
+        const today = isl && isl.days.find(d => d.date === now.date);
+        const tomorrow = isl && isl.days.find(d => d.date > now.date);
+        // Before 7 AM: this morning. Until 6:30 PM: this evening. Later: tomorrow morning.
+        let pickW = now.hour < 7 ? {d: today, k: 'am', kind: 'am', when: 'this morning'} : now.hour < 18.5 ? {d: today, k: 'pm', kind: 'pm', when: 'this evening'} : {d: tomorrow, k: 'am', kind: 'tam', when: 'tomorrow morning'};
+        let s = pickW.d && pickW.d[pickW.k];
+        if (!s && tomorrow && tomorrow.am) { pickW = {d: tomorrow, k: 'am', kind: 'tam', when: 'tomorrow morning'}; s = tomorrow.am; }
+        if (!isl || !s) { setGlance(i.code, '', 'Forecast coming soon', ''); continue; }
+        const times = pickW.k === 'am' ? '4:30–7:00 AM' : '4:30–6:30 PM';
+        setGlance(i.code, s.band, LINES[pickW.kind][s.band], `${isl.place} · ${pickW.when}, ${times}`, s.index);
       }
     } catch { fallback(); }
   })();
 
-  const mini = (id, cls, text) => { const li = document.getElementById(id); if (li) { li.className = cls || ''; li.innerHTML = `<span class="dot"></span>${esc(text)}`; } };
+  // Jamaica card: only show a line when there is something to act on (a marine warning or lightning nearby).
+  const mini = (id, cls, text) => { const p = document.getElementById(id.replace('mini-', 'al-')); if (!p) return; if (!cls || cls === 'go') { p.hidden = true; return; } p.className = 'alert ' + cls; p.textContent = (id.includes('lightning') ? '⚡ ' : '⚓ ') + text; p.hidden = false; };
 
   // Official marine warnings (Jamaica): add a line under the Jamaica card's status.
   (function marine() {
