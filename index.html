@@ -57,14 +57,14 @@ a{color:var(--teal)}
 
 /* ---------- Islands ---------- */
 main{position:relative;z-index:2}
-.newhere{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px 18px;margin:20px 0 0;background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:14px 18px;border-left:6px solid var(--orange)}
+.newhere{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:14px 18px;margin:20px 0 0;background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:14px 18px;border-left:6px solid var(--orange)}
 .newhere .nh-ico{width:38px;height:38px;border-radius:50%;background:var(--orange-soft);color:var(--orange);display:grid;place-items:center;font-weight:800;font-size:20px}
 .newhere p{margin:0;font-size:15px;color:var(--ink-2)}
 .newhere p b{color:var(--ink)}
 .newhere .nh-scale{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
 .pill{border-radius:999px;padding:4px 12px;font-weight:800;font-size:13px;color:#fff}
 .pill.go{background:var(--go)}.pill.caution{background:var(--caution)}.pill.avoid{background:var(--avoid)}
-.newhere button{border:0;background:var(--ink);color:#fff;font:inherit;font-weight:700;border-radius:999px;padding:0 18px;min-height:44px;cursor:pointer}
+.newhere button{grid-column:1/-1;justify-self:end;border:0;background:var(--ink);color:#fff;font:inherit;font-weight:700;border-radius:999px;padding:0 18px;min-height:44px;cursor:pointer}
 .section-title{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:30px 0 12px}
 .section-title h2{margin:0;font-size:26px}
 .section-title p{margin:0;color:var(--muted);font-size:14px}
@@ -114,14 +114,13 @@ main{position:relative;z-index:2}
 .lightning.danger{border-left-color:var(--avoid);background:var(--avoid-soft)}.lightning.danger svg{color:var(--avoid)}
 .lightning.watch{border-left-color:var(--caution)}.lightning.watch svg{color:var(--caution)}
 .lightning.clear{border-left-color:var(--go)}.lightning.clear svg{color:var(--go)}
-.how{margin:34px 0 0;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:0 22px}
-.how summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px}
-.how summary::-webkit-details-marker{display:none}
-.how summary::after{content:"+";font-size:24px;font-weight:600;color:var(--orange);line-height:1}
-.how[open] summary::after{content:"\2212"}
-.how summary:focus-visible{outline:3px solid var(--orange-2);outline-offset:4px;border-radius:8px}
-.how h2{margin:0;font-size:18px}
-.how p{margin:0 0 18px;color:var(--ink-2);font-size:15px;line-height:1.6}
+.newhere .how{grid-column:1/-1;border-top:1px solid var(--line);padding-top:4px}
+.newhere .how summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;min-height:40px;font-weight:700;color:var(--ink);font-size:14.5px}
+.newhere .how summary::-webkit-details-marker{display:none}
+.newhere .how summary::before{content:"+";display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--orange-soft);color:var(--orange);font-weight:800}
+.newhere .how[open] summary::before{content:"\2212"}
+.newhere .how summary:focus-visible{outline:3px solid var(--orange-2);outline-offset:3px;border-radius:6px}
+.newhere .how p{margin:4px 0 6px;color:var(--ink-2);font-size:14.5px;line-height:1.6}
 .about{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:26px 0 10px}
 .about h3{margin:0 0 4px;font-size:18px}
 .about p{margin:0;color:var(--ink-2);font-size:14.5px}
@@ -149,7 +148,7 @@ main{position:relative;z-index:2}
   .nav a{font-size:14px;padding:6px 10px}
   .islands,.about{grid-template-columns:1fr}
   .newhere{grid-template-columns:auto 1fr;padding:12px 14px}
-  .newhere button{grid-column:1/-1;width:100%}
+  .newhere button{width:100%}
   .islands{gap:12px}
   .island-body{padding:14px 16px;gap:4px}
   .glance{font-size:19px}
@@ -190,17 +189,12 @@ main{position:relative;z-index:2}
 </header>
 
 <main class="wrap">
-  <div class="newhere" id="newhere" role="note" hidden><span class="nh-ico" aria-hidden="true">?</span><div><p><b>New here?</b> Each island gets a score out of 10 for the next outdoor activity window (morning or evening).</p><div class="nh-scale"><span class="pill go">7–10 Go</span><span class="pill caution">5–6 Take care</span><span class="pill avoid">0–4 Skip it</span></div></div><button type="button" id="newhere-ok">Got it</button></div>
+  <div class="newhere" id="newhere" role="note" hidden><span class="nh-ico" aria-hidden="true">?</span><div><p><b>New here?</b> Each island gets a score out of 10 for the next outdoor activity window (morning or evening).</p><div class="nh-scale"><span class="pill go">7–10 Go</span><span class="pill caution">5–6 Take care</span><span class="pill avoid">0–4 Skip it</span></div></div><details class="how"><summary>How the score works</summary><p>Each scoring window starts with a 10 and progressively loses points for heat, rain, thunderstorms, muggy heat, strong sun, gusts, wet roads and poor air quality. Humidity only counts with heat (80% from 28°C, 85% from 30°C), and humidity, dew point and heat stress share one penalty so they don't stack. Thunderstorms or dangerous heat cap it at 4. Separate notes will appear for people with asthma or heart conditions and will not change the overall score.</p></details><button type="button" id="newhere-ok">Got it</button></div>
   <div class="section-title" id="islands">
     <h2>Today at a glance</h2>
     <p>The next outdoor window on each island, in its local time.</p>
   </div>
   <div class="islands" id="island-list"></div>
-
-  <details class="how">
-    <summary><h2>How the score works</h2></summary>
-    <p>Each scoring window starts with a 10 and progressively loses points for heat, rain, thunderstorms, muggy heat, strong sun, gusts, wet roads and poor air quality. Humidity only counts with heat (80% from 28°C, 85% from 30°C), and humidity, dew point and heat stress share one penalty so they don't stack. Thunderstorms or dangerous heat cap it at 4. Separate notes will appear for people with asthma or heart conditions and will not change the overall score.</p>
-  </details>
 
   <section class="about" aria-label="About">
     <div><h3>Made for the islands</h3><p>Heat, humidity, Saharan dust, squalls and sea breezes, scored the way they feel here.</p></div>
