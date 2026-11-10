@@ -114,7 +114,10 @@ main{position:relative;z-index:2}
 .lightning.danger{border-left-color:var(--avoid);background:var(--avoid-soft)}.lightning.danger svg{color:var(--avoid)}
 .lightning.watch{border-left-color:var(--caution)}.lightning.watch svg{color:var(--caution)}
 .lightning.clear{border-left-color:var(--go)}.lightning.clear svg{color:var(--go)}
-.about{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:34px 0 10px}
+.how{margin:34px 0 0;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 22px}
+.how h2{margin:0 0 6px;font-size:20px}
+.how p{margin:0;color:var(--ink-2);font-size:15px;line-height:1.6}
+.about{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:26px 0 10px}
 .about h3{margin:0 0 4px;font-size:18px}
 .about p{margin:0;color:var(--ink-2);font-size:14.5px}
 .foot{background:var(--sea);color:#b9cbd6;padding:22px 0 30px;font-size:14px;margin-top:34px}
@@ -188,6 +191,11 @@ main{position:relative;z-index:2}
     <p>The next outdoor window on each island, in its local time.</p>
   </div>
   <div class="islands" id="island-list"></div>
+
+  <section class="how" aria-labelledby="how-title">
+    <h2 id="how-title">How the score works</h2>
+    <p>Each scoring window starts with a 10 and progressively loses points for heat, rain, thunderstorms, muggy heat, strong sun, gusts, wet roads and poor air quality. Humidity only counts with heat (80% from 28°C, 85% from 30°C), and humidity, dew point and heat stress share one penalty so they don't stack. Thunderstorms or dangerous heat cap it at 4. Separate notes will appear for people with asthma or heart conditions and will not change the overall score.</p>
+  </section>
 
   <section class="about" aria-label="About">
     <div><h3>Made for the islands</h3><p>Heat, humidity, Saharan dust, squalls and sea breezes, scored the way they feel here.</p></div>
