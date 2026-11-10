@@ -184,7 +184,7 @@ main{position:relative;z-index:2}
   // ---- Addresses: change these when the sites move to marine. and active.islandsoutside.com ----
   const SITES = {
     marine: 'https://marine-weather.andrewcheeky.com/',
-    active: 'https://andrewcheeky.github.io/exercise/',
+    active: 'https://exercise.andrewcheeky.com/',
   };
   const MARINE_FEED = 'https://script.google.com/macros/s/AKfycbzwP_tF1SeJIBgB7HxTRBi374NiF0tQXGcSBFUk7EPPu1rSAepDsALW-iHeny6yo1Y/exec?action=marineAlert';
   const LIGHTNING_FEED = 'https://script.google.com/macros/s/AKfycbyFY483SYd2P772OZbtMiMTD6CUUuTwLFsJBm2GLxmxmZk2uBm9oUr2N2emOf41L1_CTw/exec?action=lightning';
@@ -221,7 +221,7 @@ main{position:relative;z-index:2}
     <article class="island" id="isle-${i.code}">
       <div class="flag" aria-hidden="true">${i.flag.map(c => `<i style="background:${c}"></i>`).join('')}</div>
       <div class="island-body">
-        <div class="isle-head"><img class="isle-flag" src="${SITES.active}assets/flags/${i.code.toLowerCase()}.svg" alt="" aria-hidden="true"><h3>${esc(i.name)}</h3><span class="badge" id="bd-${i.code}" aria-hidden="true">–</span></div>
+        <div class="isle-head"><img class="isle-flag" src="flags/${i.code.toLowerCase()}.svg" alt="" aria-hidden="true"><h3>${esc(i.name)}</h3><span class="badge" id="bd-${i.code}" aria-hidden="true">–</span></div>
         <p class="glance" id="gl-${i.code}">Checking the forecast…</p>
         <p class="glance-sub" id="gs-${i.code}">&nbsp;</p>
         ${i.marine ? `<p class="alert" id="al-marine" hidden></p><p class="alert" id="al-lightning" hidden></p>` : ''}
@@ -253,8 +253,12 @@ main{position:relative;z-index:2}
     try {
       let islands;
       try {
-        const r = await fetch(SITES.active + 'data/summary.json', {cache: 'no-store'});
-        if (!r.ok) throw Error();
+        // Try the secure address first; fall back to plain http while HTTPS is being set up on the exercise site.
+        let r = null;
+        for (const base of [SITES.active, SITES.active.replace('https://', 'http://')]) {
+          try { r = await fetch(base + 'data/summary.json', {cache: 'no-store'}); if (r.ok) break; } catch { r = null; }
+        }
+        if (!r || !r.ok) throw Error();
         islands = (await r.json()).islands.map(x => ({code: x.code, place: x.place, days: x.days}));
       } catch {
         const d = await (await fetch(SITES.active + 'data/forecast.json', {cache: 'no-store'})).json();
