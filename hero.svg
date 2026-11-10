@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice">
+  <!-- IslandsOutside hero: original illustration of a Caribbean coast at sunrise with a runner, a cyclist and a swimmer. -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0d3550"/>
+      <stop offset=".45" stop-color="#1f6f86"/>
+      <stop offset=".78" stop-color="#e99a5b"/>
+      <stop offset="1" stop-color="#ffcf8a"/>
+    </linearGradient>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a9aa6"/>
+      <stop offset=".5" stop-color="#16717f"/>
+      <stop offset="1" stop-color="#0b4b5c"/>
+    </linearGradient>
+    <linearGradient id="sand" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f1d39b"/>
+      <stop offset="1" stop-color="#d9b06e"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fff2c4" stop-opacity=".95"/>
+      <stop offset=".35" stop-color="#ffd38a" stop-opacity=".6"/>
+      <stop offset="1" stop-color="#ffb066" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1440" height="600" fill="url(#sky)"/>
+  <!-- sun and glow -->
+  <circle cx="1060" cy="318" r="190" fill="url(#glow)"/>
+  <circle cx="1060" cy="318" r="62" fill="#ffe1a0"/>
+  <!-- soft clouds -->
+  <g fill="#ffffff" opacity=".18">
+    <ellipse cx="300" cy="150" rx="120" ry="18"/><ellipse cx="380" cy="138" rx="70" ry="14"/>
+    <ellipse cx="1220" cy="110" rx="140" ry="16"/><ellipse cx="860" cy="190" rx="90" ry="10"/>
+  </g>
+
+  <!-- distant island chain -->
+  <path d="M560 352 C 600 318 640 300 690 306 C 740 312 760 296 800 300 C 850 306 880 332 920 352 Z" fill="#245b6b" opacity=".75"/>
+  <path d="M1180 352 C 1210 330 1250 322 1290 328 C 1330 334 1370 330 1440 344 V352 Z" fill="#245b6b" opacity=".6"/>
+  <path d="M0 352 C 60 322 140 296 230 302 C 300 306 340 290 400 300 C 450 308 480 330 520 352 Z" fill="#1d4f5f" opacity=".85"/>
+  <!-- palms on the near-left island -->
+  <g stroke="#173f4c" stroke-width="5" fill="none" stroke-linecap="round">
+    <path d="M250 300 C 252 280 256 262 262 246"/><path d="M300 298 C 298 282 296 268 290 254"/>
+  </g>
+  <g fill="#173f4c">
+    <path d="M262 246 c -18 -6 -34 0 -44 10 c 16 -4 30 -4 44 -10z"/><path d="M262 246 c 14 -12 32 -12 44 -4 c -16 0 -30 0 -44 4z"/>
+    <path d="M262 246 c -6 -16 -2 -30 8 -38 c -2 14 -4 26 -8 38z"/><path d="M262 246 c 18 0 30 10 34 22 c -12 -8 -22 -14 -34 -22z"/>
+    <path d="M290 254 c -16 -8 -32 -4 -42 4 c 14 -2 28 -2 42 -4z"/><path d="M290 254 c 12 -12 30 -14 42 -6 c -14 0 -28 2 -42 6z"/>
+    <path d="M290 254 c -4 -16 2 -28 12 -34 c -4 12 -8 22 -12 34z"/>
+  </g>
+
+  <!-- sea -->
+  <rect y="350" width="1440" height="250" fill="url(#sea)"/>
+  <!-- sun path on the water -->
+  <g fill="#ffe1a0" opacity=".55">
+    <rect x="1010" y="362" width="100" height="4" rx="2"/><rect x="1020" y="376" width="80" height="4" rx="2"/>
+    <rect x="1000" y="392" width="120" height="4" rx="2"/><rect x="1030" y="410" width="60" height="4" rx="2"/>
+    <rect x="1010" y="428" width="96" height="4" rx="2"/>
+  </g>
+  <!-- wave lines -->
+  <g stroke="#9fe0e6" stroke-width="3" fill="none" stroke-linecap="round" opacity=".35">
+    <path d="M80 400 q 20 -8 40 0 t 40 0"/><path d="M420 420 q 20 -8 40 0 t 40 0"/><path d="M700 388 q 20 -8 40 0 t 40 0"/>
+    <path d="M1260 400 q 20 -8 40 0 t 40 0"/><path d="M880 440 q 20 -8 40 0 t 40 0"/>
+  </g>
+
+  <!-- sailboat -->
+  <g transform="translate(860 330)">
+    <path d="M0 24 h44 l-8 9 h-28z" fill="#0f2f3a"/>
+    <path d="M22 22 V-26 L44 18 z" fill="#ffffff" opacity=".92"/><path d="M20 22 V-18 L4 18 z" fill="#ffd9a8" opacity=".9"/>
+  </g>
+
+  <!-- swimmer (freestyle) with splash -->
+  <g transform="translate(1180 432)">
+    <ellipse cx="0" cy="8" rx="46" ry="7" fill="#0b4b5c" opacity=".55"/>
+    <path d="M-34 6 q 24 -10 52 -4" stroke="#0f2a33" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <circle cx="26" cy="-2" r="9" fill="#e85d2a"/>
+    <path d="M10 0 C 14 -26 34 -34 50 -24" stroke="#0f2a33" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <g stroke="#dff7f9" stroke-width="3" stroke-linecap="round" opacity=".85"><path d="M-46 4 l-10 -4"/><path d="M-44 10 l-12 2"/><path d="M54 -20 l8 -6"/></g>
+  </g>
+
+  <!-- foreground: beach and coastal road -->
+  <path d="M0 470 C 260 440 520 452 760 468 C 1000 484 1220 478 1440 458 V600 H0 Z" fill="url(#sand)"/>
+  <path d="M0 515 C 300 488 600 500 860 512 C 1100 524 1280 518 1440 504 V556 C 1260 568 1080 572 860 562 C 600 550 300 540 0 566 Z" fill="#33393f"/>
+  <path d="M0 540 C 300 514 600 526 860 537 C 1100 547 1280 543 1440 530" stroke="#f4f1e8" stroke-width="4" stroke-dasharray="26 22" fill="none" opacity=".8"/>
+  <!-- low surf where the sea meets the sand -->
+  <path d="M0 470 C 260 440 520 452 760 468 C 1000 484 1220 478 1440 458" stroke="#ffffff" stroke-width="5" fill="none" opacity=".55"/>
+
+  <!-- palm on the beach -->
+  <g transform="translate(1320 470)">
+    <path d="M0 0 C 4 -40 14 -80 30 -118" stroke="#2c2620" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <g fill="#1f4636">
+      <path d="M30 -118 c -34 -6 -62 8 -78 26 c 26 -10 52 -14 78 -26z"/><path d="M30 -118 c 30 -18 64 -14 84 2 c -28 -4 -56 -4 -84 -2z"/>
+      <path d="M30 -118 c -10 -30 0 -54 18 -66 c -6 22 -10 44 -18 66z"/><path d="M30 -118 c 34 4 56 22 62 46 c -20 -18 -40 -30 -62 -46z"/>
+      <path d="M30 -118 c -26 10 -42 32 -46 54 c 14 -20 30 -38 46 -54z"/>
+    </g>
+  </g>
+
+  <!-- runner -->
+  <g transform="translate(470 508)" stroke="#11202a" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <circle cx="6" cy="-62" r="10" fill="#11202a" stroke="none"/>
+    <path d="M2 -50 L-6 -16" stroke-width="12"/>
+    <path d="M0 -44 L-20 -30 L-30 -40" stroke-width="7"/>
+    <path d="M2 -44 L20 -32 L30 -18" stroke-width="7"/>
+    <path d="M-6 -16 L12 4 L4 26" stroke-width="9"/>
+    <path d="M-6 -16 L-22 4 L-40 0" stroke-width="9"/>
+  </g>
+
+  <!-- cyclist -->
+  <g transform="translate(700 498)" stroke="#11202a" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <circle cx="-34" cy="20" r="24" stroke-width="5"/>
+    <circle cx="40" cy="20" r="24" stroke-width="5"/>
+    <path d="M-34 20 L-4 20 L22 -10 L-14 -10 Z" stroke-width="5"/>
+    <path d="M-4 20 L-18 -16 M22 -10 L40 20 M18 -18 L28 -20" stroke-width="5"/>
+    <path d="M-22 -18 h10" stroke-width="5"/>
+    <path d="M-16 -24 C -6 -46 10 -52 24 -40" stroke-width="12"/>
+    <path d="M18 -42 L26 -22" stroke-width="7"/>
+    <path d="M-14 -24 L4 -4 L-4 20" stroke-width="9"/>
+    <circle cx="34" cy="-50" r="10" fill="#11202a" stroke="none"/>
+    <path d="M24 -58 c 8 -8 20 -8 24 2" stroke="#fc4c02" stroke-width="5"/>
+  </g>
+</svg>
