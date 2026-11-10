@@ -1,9 +1,9 @@
-# IslandsOutside
+# Caribbean Islands We Outside (islandsoutside.com)
 
-Welcome page for **IslandsOutside: outdoor weather for the Caribbean**. It links to:
+Welcome page for **Caribbean Islands We Outside: outdoor weather for the Caribbean**. It links to:
 
 - **Marine Weather** (repo `marine-weather`)
-- **Jamaica We Active!** (repo `exercise`)
+- **Jamaica We Outside** (repo `exercise`)
 
 It is a single static page (`index.html`) served free by GitHub Pages. It shows live status from both sites:
 the official small craft warning (marine Apps Script), the next Kingston run/ride score (the exercise site's

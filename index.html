@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>IslandsOutside | Outdoor weather for the Caribbean</title>
-<meta name="description" content="IslandsOutside: friendly outdoor weather for the Caribbean. The best times to run, ride or swim in Jamaica, the Cayman Islands, Barbados and Trinidad, plus marine forecasts for Jamaica.">
+<title>Caribbean Islands We Outside | Outdoor weather for the Caribbean</title>
+<meta name="description" content="Caribbean Islands We Outside: friendly outdoor weather for the Caribbean. The best times to run, ride or swim in Jamaica, the Cayman Islands, Barbados and Trinidad, plus marine forecasts for Jamaica.">
 <meta name="theme-color" content="#0d3550">
 <link rel="preload" as="image" href="hero.jpg" imagesrcset="hero-1000.jpg 1000w, hero.jpg 2000w" imagesizes="100vw">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -33,6 +33,8 @@ a{color:var(--teal)}
 .top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:18px}
 .brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:600;font-size:22px;letter-spacing:.07em;text-shadow:0 1px 8px rgba(0,0,0,.35)}
 .brand b{color:var(--orange-2);font-weight:700}
+.wordmark{display:flex;flex-direction:column;line-height:1}
+.wordmark small{font-size:11.5px;letter-spacing:.24em;color:#cfeef2;font-weight:600;margin-bottom:3px}
 .brand svg{width:30px;height:30px}
 .nav{display:flex;gap:6px;background:rgba(255,255,255,.14);backdrop-filter:blur(6px);border-radius:999px;padding:4px}
 .nav a{color:#fff;text-decoration:none;font-weight:600;font-size:15px;padding:7px 14px;border-radius:999px}
@@ -109,9 +111,9 @@ main{position:relative;z-index:2}
   <img class="hero-art" src="hero.jpg" srcset="hero-1000.jpg 1000w, hero.jpg 2000w" sizes="100vw" alt="A calm Caribbean bay with boats at anchor in front of a small green island, seen from the beach">
   <div class="hero-shade" aria-hidden="true"></div>
   <div class="wrap top">
-    <a class="brand" href="./" aria-label="IslandsOutside home">
+    <a class="brand" href="./" aria-label="Caribbean Islands We Outside home">
       <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="21" cy="11" r="6" fill="#ff9a3c"/><path d="M2 22c3 0 3-2 6-2s3 2 6 2 3-2 6-2 3 2 6 2 3-2 4-2" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M2 27c3 0 3-2 6-2s3 2 6 2 3-2 6-2 3 2 6 2 3-2 4-2" fill="none" stroke="#8fe1e8" stroke-width="2.4" stroke-linecap="round"/></svg>
-      <span>ISLANDS<b>OUTSIDE</b></span>
+      <span class="wordmark"><small>CARIBBEAN ISLANDS</small><span>WE <b>OUTSIDE</b></span></span>
     </a>
     <nav class="nav" aria-label="Sections">
       <a href="#islands">Islands</a>
@@ -146,7 +148,7 @@ main{position:relative;z-index:2}
 
 <footer class="foot">
   <div class="wrap">
-    <p><strong>IslandsOutside</strong> · Forecasts from <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a> (<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>), lightning from <a href="https://www.xweather.com/" target="_blank" rel="noopener noreferrer">Xweather</a>, and official marine warnings from the Meteorological Service of Jamaica.</p>
+    <p><strong>Caribbean Islands We Outside</strong> · Forecasts from <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a> (<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>), lightning from <a href="https://www.xweather.com/" target="_blank" rel="noopener noreferrer">Xweather</a>, and official marine warnings from the Meteorological Service of Jamaica.</p>
     <p>No accounts, cookies or tracking. Guidance only: always check conditions for yourself.</p>
   </div>
 </footer>
@@ -164,13 +166,13 @@ main{position:relative;z-index:2}
 
   // Islands shown on the home page. path = the island's page on the Active site ('' = Jamaica, the main page).
   const ISLANDS = [
-    {code: 'JM', name: 'Jamaica', brand: 'Jamaica We Active!', path: '', tz: 'America/Jamaica', flag: ['#009b3a', '#fed100', '#000000'], marine: true,
+    {code: 'JM', name: 'Jamaica', brand: 'Jamaica We Outside', path: '', tz: 'America/Jamaica', flag: ['#009b3a', '#fed100', '#000000'], marine: true,
       places: 'Kingston, Montego Bay, Ocho Rios, Negril and more · beaches and pools'},
-    {code: 'KY', name: 'Cayman Islands', brand: 'Cayman We Active!', path: 'cayman/', tz: 'America/Cayman', flag: ['#012169', '#c8102e', '#ffffff'],
+    {code: 'KY', name: 'Cayman Islands', brand: 'Cayman We Outside', path: 'cayman/', tz: 'America/Cayman', flag: ['#012169', '#c8102e', '#ffffff'],
       places: 'George Town, Seven Mile Beach, West Bay, East End, Cayman Brac · Stingray City and Rum Point'},
-    {code: 'BB', name: 'Barbados', brand: 'Barbados We Active!', path: 'barbados/', tz: 'America/Barbados', flag: ['#00267f', '#ffc726', '#00267f'],
+    {code: 'BB', name: 'Barbados', brand: 'Barbados We Outside', path: 'barbados/', tz: 'America/Barbados', flag: ['#00267f', '#ffc726', '#00267f'],
       places: 'Bridgetown, Hastings, Holetown, Speightstown, the East Coast Road · Carlisle Bay and Mullins'},
-    {code: 'TT', name: 'Trinidad and Tobago', brand: 'Trinidad We Active!', path: 'trinidad/', tz: 'America/Port_of_Spain', flag: ['#c8102e', '#000000', '#ffffff'],
+    {code: 'TT', name: 'Trinidad and Tobago', brand: 'Trinidad We Outside', path: 'trinidad/', tz: 'America/Port_of_Spain', flag: ['#c8102e', '#000000', '#ffffff'],
       places: 'Queen\'s Park Savannah, Chaguaramas, the North Coast Road, Arima, San Fernando · Maracas Bay'},
   ];
 
@@ -268,7 +270,7 @@ main{position:relative;z-index:2}
       const strikes = (f.cells || []).filter(c => nowS - c[2] <= 30 * 60).reduce((a, c) => a + c[3], 0);
       const at = new Intl.DateTimeFormat('en-US', {timeZone: 'America/Jamaica', hour: 'numeric', minute: '2-digit'}).format(new Date(f.updated));
       if (!strikes) set('clear', 'No lightning near Jamaica', `None in the last 30 minutes · checked ${at} · other islands coming soon`);
-      else set(strikes >= 20 ? 'danger' : 'watch', `${strikes} lightning strike${strikes === 1 ? '' : 's'} near Jamaica in the last 30 minutes`, `Open Jamaica We Active! for the distance from your area · checked ${at}`);
+      else set(strikes >= 20 ? 'danger' : 'watch', `${strikes} lightning strike${strikes === 1 ? '' : 's'} near Jamaica in the last 30 minutes`, `Open Jamaica We Outside for the distance from your area · checked ${at}`);
     } catch { set('', 'Lightning watch unavailable', 'Try again in a few minutes.'); }
   })();
 })();
