@@ -56,7 +56,8 @@ main{position:relative;z-index:2}
 .flag{height:8px;display:flex}
 .flag i{flex:1}
 .island-body{padding:18px 20px 18px;display:flex;flex-direction:column;gap:12px;flex:1}
-.island h3{margin:0;font-size:24px;line-height:1.1}
+.island h3{margin:0;font-size:24px;line-height:1.1;display:flex;align-items:center;gap:10px}
+.isle-flag{height:20px;width:auto;border-radius:3px;box-shadow:0 0 0 1px rgba(0,0,0,.12)}
 .island .places{margin:2px 0 0;color:var(--muted);font-size:13.5px}
 .status{display:flex;align-items:center;gap:12px;background:var(--bg);border-radius:14px;padding:12px 14px;min-height:62px}
 .status .dot{width:12px;height:12px;border-radius:50%;background:#b8c2ca;flex:0 0 auto}
@@ -198,7 +199,7 @@ main{position:relative;z-index:2}
     <article class="island" id="isle-${i.code}">
       <div class="flag" aria-hidden="true">${i.flag.map(c => `<i style="background:${c}"></i>`).join('')}</div>
       <div class="island-body">
-        <div><h3>${esc(i.name)}</h3><p class="places">${esc(i.places)}</p></div>
+        <div><h3><img class="isle-flag" src="${SITES.active}assets/flags/${i.code.toLowerCase()}.svg" alt="" aria-hidden="true">${esc(i.name)}</h3><p class="places">${esc(i.places)}</p></div>
         <div class="status" id="st-${i.code}"><span class="dot"></span><div><strong>Finding the best time…</strong><span class="sub">&nbsp;</span></div></div>
         <div class="links">
           <a class="btn primary" href="${SITES.active + i.path}">${ICON.run}${esc(i.brand)}</a>
