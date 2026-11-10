@@ -45,9 +45,11 @@ a{color:var(--teal)}
 .intro>*{max-width:560px}
 .intro h1{margin:0;font-size:clamp(32px,5vw,54px);line-height:1.08;font-weight:800;letter-spacing:-.02em;text-shadow:0 2px 16px rgba(0,0,0,.3)}
 .intro p{margin:14px 0 0;font-size:18px;color:#e2f2f5;max-width:44ch}
-.pick{display:inline-flex;align-items:center;gap:8px;margin-top:22px;background:#fff;color:var(--ink);border-radius:999px;padding:6px 10px 6px 16px;box-shadow:0 6px 18px rgba(0,0,0,.25)}
-.pick svg{width:20px;height:20px;color:var(--orange)}
-.pick select{border:0;background:transparent;font:inherit;font-weight:700;font-size:16px;color:var(--ink);padding:8px 4px;min-height:44px;cursor:pointer;max-width:70vw}
+.pickers{display:grid;gap:12px;margin-top:24px}
+.pick-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pick-row label{font-weight:700;font-size:17px;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.4);min-width:300px}
+.pick{display:inline-flex;align-items:center;background:#fff;color:var(--ink);border-radius:999px;padding:2px 10px 2px 14px;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.pick select{border:0;background:transparent;font:inherit;font-weight:700;font-size:16px;color:var(--ink);padding:8px 4px;min-height:44px;cursor:pointer;width:220px;max-width:70vw}
 .pick:focus-within{outline:3px solid var(--orange-2);outline-offset:3px}
 .intro .cta{display:inline-flex;align-items:center;gap:8px;margin-top:22px;background:var(--orange);color:#fff;text-decoration:none;font-weight:700;padding:12px 20px;border-radius:999px;box-shadow:0 6px 18px rgba(252,76,2,.4)}
 .intro .cta:focus-visible{outline:3px solid #fff;outline-offset:3px}
@@ -121,6 +123,9 @@ main{position:relative;z-index:2}
   .hero-shade{background:linear-gradient(180deg,rgba(8,30,46,.8) 0%,rgba(8,30,46,.62) 52%,rgba(8,30,46,.05) 88%)}
   .intro{padding:26px 16px 160px}
   .intro p{font-size:16px}
+  .pick-row{gap:6px}
+  .pick-row label{min-width:0;font-size:15.5px;width:100%}
+  .pick,.pick select{width:100%}
   .brand{font-size:19px}
   .nav a{font-size:14px;padding:6px 10px}
   .islands,.about{grid-template-columns:1fr}
@@ -150,8 +155,16 @@ main{position:relative;z-index:2}
   <div class="wrap intro">
     <h1>Outdoor weather for the Caribbean</h1>
     <p>Know before you go: the best time to run, ride or swim on your island, and marine forecasts for time on the water.</p>
-    <label class="pick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-      <select id="island-pick" aria-label="Choose your island"><option value="">Choose your island</option></select></label>
+    <div class="pickers">
+      <div class="pick-row">
+        <label for="pick-active">Where do you want to run or ride?</label>
+        <span class="pick"><select id="pick-active"><option value="">Choose a country</option></select></span>
+      </div>
+      <div class="pick-row">
+        <label for="pick-fish">Where do you want to fish?</label>
+        <span class="pick"><select id="pick-fish"><option value="">Choose a country</option></select></span>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -210,10 +223,10 @@ main{position:relative;z-index:2}
   document.getElementById('ft-privacy').href = SITES.active + 'privacy.html';
   document.getElementById('ft-how').href = SITES.active + 'how-it-works.html';
 
-  // Island picker (dropdown in the header): goes straight to that island's page.
-  const pick = document.getElementById('island-pick');
-  ISLANDS.forEach(i => { const o = document.createElement('option'); o.value = SITES.active + i.path; o.textContent = i.name; pick.appendChild(o); });
-  pick.addEventListener('change', () => { if (pick.value) window.location.href = pick.value; });
+  // Two pickers in the header: run or ride (island pages), and fish (Marine Weather; Jamaica for now).
+  const fill = (sel, items) => { items.forEach(([label, url]) => { const o = document.createElement('option'); o.textContent = label; if (url) o.value = url; else { o.disabled = true; o.value = ''; } sel.appendChild(o); }); sel.addEventListener('change', () => { if (sel.value) window.location.href = sel.value; }); };
+  fill(document.getElementById('pick-active'), ISLANDS.map(i => [i.name, SITES.active + i.path]));
+  fill(document.getElementById('pick-fish'), ISLANDS.map(i => i.marine ? [i.name, SITES.marine] : [i.name + ' (coming soon)', '']));
 
   // At-a-glance tiles (no links): one friendly line per island for the next window.
   const list = document.getElementById('island-list');
