@@ -267,7 +267,7 @@ main{position:relative;z-index:2}
         <div class="isle-head"><img class="isle-flag" src="flags/${i.code.toLowerCase()}.svg" alt="" aria-hidden="true"><h3>${esc(i.name)}</h3><span class="badge" id="bd-${i.code}" aria-hidden="true">–</span></div>
         <p class="glance" id="gl-${i.code}">Checking the forecast…</p>
         <p class="glance-sub" id="gs-${i.code}">&nbsp;</p>
-        ${i.marine ? `<p class="alert" id="al-marine" hidden></p><p class="alert" id="al-lightning" hidden></p>` : ''}
+        ${i.marine ? `<p class="alert" id="al-marine" hidden></p>` : ''}${i.code === 'JM' || i.code === 'TT' ? `<p class="alert" id="al-lightning-${i.code}" hidden></p>` : ''}
       </div>
     </article>`).join('');
 
@@ -342,17 +342,24 @@ main{position:relative;z-index:2}
     document.head.appendChild(s);
   })();
 
-  // Lightning across Jamaica in the last 30 minutes (a line on the Jamaica card).
+  // Lightning near Jamaica and Trinidad in the last 30 minutes (a line on each card, only when there is lightning).
   (async function lightning() {
+    const line = (code, cls, text) => { const p = document.getElementById('al-lightning-' + code); if (!p) return; if (!cls || cls === 'go') { p.hidden = true; return; } p.className = 'alert ' + cls; p.textContent = '⚡ ' + text; p.hidden = false; };
+    const km = (a, b, c, d) => { const r = Math.PI / 180, x = Math.sin((c - a) * r / 2) ** 2 + Math.cos(a * r) * Math.cos(c * r) * Math.sin((d - b) * r / 2) ** 2; return 12742 * Math.asin(Math.sqrt(x)); };
     try {
       const f = await (await fetch(LIGHTNING_FEED, {cache: 'no-store'})).json();
-      const fresh = f.status === 'live' && f.updated && Date.now() - Date.parse(f.updated) < 15 * 60000;
-      if (!fresh) return mini('mini-lightning', '', 'Lightning watch is off (runs 4 AM–9 PM)');
-      const nowS = Date.now() / 1000;
-      const strikes = (f.cells || []).filter(c => nowS - c[2] <= 30 * 60).reduce((a, c) => a + c[3], 0);
-      if (!strikes) mini('mini-lightning', 'go', 'No lightning near Jamaica in the last 30 minutes');
-      else mini('mini-lightning', strikes >= 20 ? 'avoid' : 'caution', `${strikes} lightning strike${strikes === 1 ? '' : 's'} near Jamaica in the last 30 minutes`);
-    } catch { mini('mini-lightning', '', 'Lightning watch unavailable right now'); }
+      const regions = f.regions || {JM: {name: 'Jamaica', status: f.status, updated: f.updated, circles: [[18.15, -77.75], [18.10, -76.80]]}};
+      const nowS = Date.now() / 1000, R = f.radiusKm || 100;
+      for (const code of ['JM', 'TT']) {
+        const g = regions[code]; if (!g) continue;
+        const fresh = g.status === 'live' && g.updated && Date.now() - Date.parse(g.updated) < 15 * 60000;
+        if (!fresh) { line(code, ''); continue; }
+        const strikes = (f.cells || []).filter(c => nowS - c[2] <= 30 * 60 && g.circles.some(([la, lo]) => km(c[0], c[1], la, lo) <= R)).reduce((a, c) => a + c[3], 0);
+        const name = code === 'JM' ? 'Jamaica' : 'Trinidad';
+        if (!strikes) line(code, 'go');
+        else line(code, strikes >= 20 ? 'avoid' : 'caution', `${strikes} lightning strike${strikes === 1 ? '' : 's'} near ${name} in the last 30 minutes`);
+      }
+    } catch { /* leave the cards as they are */ }
   })();
 })();
 </script>
