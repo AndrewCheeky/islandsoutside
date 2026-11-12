@@ -225,11 +225,11 @@ main{position:relative;z-index:2}
 
   // Islands shown on the home page. path = the island's page on the Active site ('' = Jamaica, the main page).
   const ISLANDS = [
-    {code: 'JM', name: 'Jamaica', brand: 'Jamaica We Outside', path: '', tz: 'America/Jamaica', flag: ['#009b3a', '#fed100', '#000000'], marine: true,
+    {code: 'JM', name: 'Jamaica', brand: 'Jamaica We Outside', path: '', tz: 'America/Jamaica', flag: ['#000000', '#009639', '#ffd100'],   // official order: black, green and gold (Pantone 355, 109) marine: true,
       places: 'Kingston, Montego Bay, Ocho Rios, Negril and more · beaches and pools'},
-    {code: 'KY', name: 'Cayman Islands', brand: 'Cayman We Outside', path: 'cayman/', tz: 'America/Cayman', flag: ['#012169', '#c8102e', '#ffffff'],
+    {code: 'KY', name: 'Cayman Islands', brand: 'Cayman We Outside', path: 'cayman/', tz: 'America/Cayman', flag: [['#012169', 6], ['#ffffff', 1], ['#c8102e', 2], ['#ffffff', 1], ['#012169', 6]],   // Blue Ensign: navy, with the white-edged red cross
       places: 'George Town, Seven Mile Beach, West Bay, East End, Cayman Brac · Stingray City and Rum Point'},
-    {code: 'BB', name: 'Barbados', brand: 'Barbados We Outside', path: 'barbados/', tz: 'America/Barbados', flag: ['#00267f', '#ffc726', '#00267f'],
+    {code: 'BB', name: 'Barbados', brand: 'Barbados We Outside', path: 'barbados/', tz: 'America/Barbados', flag: [['#00267f', 5], ['#ffc726', 2], ['#000000', 1], ['#ffc726', 2], ['#00267f', 5]],   // ultramarine, gold, ultramarine with the black trident
       places: 'Bridgetown, Hastings, Holetown, Speightstown, the East Coast Road · Carlisle Bay and Mullins'},
     {code: 'TT', name: 'Trinidad and Tobago', brand: 'Trinidad We Outside', path: 'trinidad/', tz: 'America/Port_of_Spain', flag: [['#c8102e', 5], ['#ffffff', 1], ['#000000', 2], ['#ffffff', 1], ['#c8102e', 5]],   // like the flag: red, white-edged black band
       places: 'Queen\'s Park Savannah, Chaguaramas, the North Coast Road, Arima, San Fernando · Maracas Bay'},
