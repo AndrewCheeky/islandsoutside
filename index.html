@@ -231,7 +231,7 @@ main{position:relative;z-index:2}
       places: 'George Town, Seven Mile Beach, West Bay, East End, Cayman Brac · Stingray City and Rum Point'},
     {code: 'BB', name: 'Barbados', brand: 'Barbados We Outside', path: 'barbados/', tz: 'America/Barbados', flag: ['#00267f', '#ffc726', '#00267f'],
       places: 'Bridgetown, Hastings, Holetown, Speightstown, the East Coast Road · Carlisle Bay and Mullins'},
-    {code: 'TT', name: 'Trinidad and Tobago', brand: 'Trinidad We Outside', path: 'trinidad/', tz: 'America/Port_of_Spain', flag: ['#c8102e', '#ffffff', '#000000'],
+    {code: 'TT', name: 'Trinidad and Tobago', brand: 'Trinidad We Outside', path: 'trinidad/', tz: 'America/Port_of_Spain', flag: [['#c8102e', 5], ['#ffffff', 1], ['#000000', 2], ['#ffffff', 1], ['#c8102e', 5]],   // like the flag: red, white-edged black band
       places: 'Queen\'s Park Savannah, Chaguaramas, the North Coast Road, Arima, San Fernando · Maracas Bay'},
   ];
 
@@ -262,7 +262,7 @@ main{position:relative;z-index:2}
   const list = document.getElementById('island-list');
   list.innerHTML = ISLANDS.map(i => `
     <article class="island" id="isle-${i.code}">
-      <div class="flag" aria-hidden="true">${i.flag.map(c => `<i style="background:${c}"></i>`).join('')}</div>
+      <div class="flag" aria-hidden="true">${i.flag.map(c => Array.isArray(c) ? `<i style="background:${c[0]};flex:${c[1]}"></i>` : `<i style="background:${c}"></i>`).join('')}</div>
       <div class="island-body">
         <div class="isle-head"><img class="isle-flag" src="flags/${i.code.toLowerCase()}.svg" alt="" aria-hidden="true"><h3>${esc(i.name)}</h3><span class="badge" id="bd-${i.code}" aria-hidden="true">–</span></div>
         <p class="glance" id="gl-${i.code}">Checking the forecast…</p>
