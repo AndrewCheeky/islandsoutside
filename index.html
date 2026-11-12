@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>One Caribbean We Outside | Outdoor weather for the Caribbean</title>
-<meta name="description" content="One Caribbean We Outside: friendly outdoor weather for the Caribbean. The best times to run, ride or swim in Jamaica, the Cayman Islands, Barbados and Trinidad, plus marine forecasts for Jamaica.">
+<meta name="description" content="One Caribbean We Outside: friendly outdoor weather for the Caribbean. The best times to run, ride or swim in Jamaica, the Cayman Islands, Barbados, Trinidad and Grenada, plus marine forecasts for Jamaica.">
 <meta name="theme-color" content="#0d3550">
 <link rel="preload" as="image" href="hero.jpg" imagesrcset="hero-1000.jpg 1000w, hero.jpg 2000w" imagesizes="100vw">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
@@ -199,7 +199,7 @@ main{position:relative;z-index:2}
   <section class="about" aria-label="About">
     <div><h3>Made for the islands</h3><p>Heat, humidity, Saharan dust, squalls and sea breezes, scored the way they feel here.</p></div>
     <div><h3>Plain answers</h3><p>Go, Take care or Skip it, with the reasons shown. No account, no app to install.</p></div>
-    <div><h3>Growing</h3><p>Jamaica, the Cayman Islands, Barbados and Trinidad so far. More Caribbean islands will follow.</p></div>
+    <div><h3>Growing</h3><p>Jamaica, the Cayman Islands, Barbados, Trinidad and Grenada so far. More Caribbean islands will follow.</p></div>
   </section>
 </main>
 
@@ -225,7 +225,7 @@ main{position:relative;z-index:2}
 
   // Islands shown on the home page. path = the island's page on the Active site ('' = Jamaica, the main page).
   const ISLANDS = [
-    {code: 'JM', name: 'Jamaica', brand: 'Jamaica We Outside', path: '', tz: 'America/Jamaica', flag: ['#000000', '#009639', '#ffd100'],   // official order: black, green and gold (Pantone 355, 109) marine: true,
+    {code: 'JM', name: 'Jamaica', brand: 'Jamaica We Outside', path: '', tz: 'America/Jamaica', flag: ['#000000', '#009639', '#ffd100'], marine: true,   // flag colours in the official order: black, green and gold
       places: 'Kingston, Montego Bay, Ocho Rios, Negril and more · beaches and pools'},
     {code: 'KY', name: 'Cayman Islands', brand: 'Cayman We Outside', path: 'cayman/', tz: 'America/Cayman', flag: [['#012169', 6], ['#ffffff', 1], ['#c8102e', 2], ['#ffffff', 1], ['#012169', 6]],   // Blue Ensign: navy, with the white-edged red cross
       places: 'George Town, Seven Mile Beach, West Bay, East End, Cayman Brac · Stingray City and Rum Point'},
@@ -233,6 +233,8 @@ main{position:relative;z-index:2}
       places: 'Bridgetown, Hastings, Holetown, Speightstown, the East Coast Road · Carlisle Bay and Mullins'},
     {code: 'TT', name: 'Trinidad and Tobago', brand: 'Trinidad We Outside', path: 'trinidad/', tz: 'America/Port_of_Spain', flag: [['#c8102e', 5], ['#ffffff', 1], ['#000000', 2], ['#ffffff', 1], ['#c8102e', 5]],   // like the flag: red, white-edged black band
       places: 'Queen\'s Park Savannah, Chaguaramas, the North Coast Road, Arima, San Fernando · Maracas Bay'},
+    {code: 'GD', name: 'Grenada', brand: 'Grenada We Outside', path: 'grenada/', tz: 'America/Grenada', flag: ['#ce1126', '#fcd116', '#007a5e'],   // official order: red, gold and green
+      places: 'St George\'s, Grand Anse (triathlon), True Blue, Grand Etang, Grenville · Grand Anse and Morne Rouge beaches'},
   ];
 
   const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
