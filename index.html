@@ -354,7 +354,7 @@ main{position:relative;z-index:2}
       const nowS = Date.now() / 1000, R = f.radiusKm || 100;
       for (const code of ['JM', 'TT']) {
         const g = regions[code]; if (!g) continue;
-        const fresh = g.status === 'live' && g.updated && Date.now() - Date.parse(g.updated) < 15 * 60000;
+        const fresh = g.status === 'live' && g.updated && Date.now() - Date.parse(g.updated) < Math.max(15, (g.everyMin || 10) + 6) * 60000;
         if (!fresh) { line(code, ''); continue; }
         const strikes = (f.cells || []).filter(c => nowS - c[2] <= 30 * 60 && g.circles.some(([la, lo]) => km(c[0], c[1], la, lo) <= R)).reduce((a, c) => a + c[3], 0);
         const name = code === 'JM' ? 'Jamaica' : 'Trinidad';
